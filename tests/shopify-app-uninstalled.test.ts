@@ -1,0 +1,9 @@
+import{createHmac}from"node:crypto";
+import{describe,expect,it,vi}from"vitest";
+import{ShopifyAppUninstalledWebhookService}from"../src/integrations/shopify-app-uninstalled.js";
+
+describe("Shopify app uninstalled webhook",()=>{
+  it("verifies the signed topic and revokes the normalized shop",async()=>{const secret="secret",raw=Buffer.from(JSON.stringify({id:1,domain:"store.myshopify.com"})),connections={revokeShopifyInstallation:vi.fn().mockResolvedValue({accepted:true,duplicate:false,workspaceMatched:true})},service=new ShopifyAppUninstalledWebhookService(secret,connections as never);await expect(service.receive(raw,{hmac:createHmac("sha256",secret).update(raw).digest("base64"),webhookId:"delivery-1",shopDomain:"Store.MyShopify.com",topic:"app/uninstalled"})).resolves.toMatchObject({workspaceMatched:true});expect(connections.revokeShopifyInstallation).toHaveBeenCalledWith({shopDomain:"store.myshopify.com",webhookId:"delivery-1"})});
+  it("rejects forged signatures before repository access",async()=>{const connections={revokeShopifyInstallation:vi.fn()},service=new ShopifyAppUninstalledWebhookService("secret",connections as never);await expect(service.receive(Buffer.from("{}"),{hmac:"forged",webhookId:"delivery-1",shopDomain:"store.myshopify.com",topic:"app/uninstalled"})).rejects.toMatchObject({status:401});expect(connections.revokeShopifyInstallation).not.toHaveBeenCalled()});
+  it("rejects a signed cross-topic delivery",async()=>{const secret="secret",raw=Buffer.from("{}"),connections={revokeShopifyInstallation:vi.fn()},service=new ShopifyAppUninstalledWebhookService(secret,connections as never);await expect(service.receive(raw,{hmac:createHmac("sha256",secret).update(raw).digest("base64"),webhookId:"delivery-1",shopDomain:"store.myshopify.com",topic:"orders/create"})).rejects.toMatchObject({status:400});expect(connections.revokeShopifyInstallation).not.toHaveBeenCalled()});
+});

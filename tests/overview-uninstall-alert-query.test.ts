@@ -1,0 +1,3 @@
+import{describe,expect,it,vi}from"vitest";
+import{AdminOverviewService}from"../src/admin/overview-service.js";
+describe("overview uninstall alert query",()=>{it("surfaces only the latest uninstall while no active Shopify connection exists",async()=>{const query=vi.fn().mockResolvedValueOnce({rowCount:1}).mockResolvedValueOnce({rows:[{}]}).mockResolvedValueOnce({rows:[]}),service=new AdminOverviewService({query}as never);await service.get("workspace-1");const sql=String(query.mock.calls[2]?.[0]);expect(sql).toContain("'SHOPIFY_UNINSTALL'");expect(sql).toContain("SHOPIFY_APP_UNINSTALLED");expect(sql).toContain("max(received_at)");expect(sql).toContain("NOT EXISTS");expect(sql).toContain("status='CONNECTED'")})});

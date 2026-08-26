@@ -1,0 +1,2 @@
+import{describe,expect,it}from"vitest";import{onboardingIdempotencyJs}from"../src/admin/onboarding-idempotency-ui.js";
+describe("onboarding idempotency UI",()=>{it("reuses one key for concurrent onboarding submissions",()=>{expect(onboardingIdempotencyJs).toContain("pendingKey");expect(onboardingIdempotencyJs).toContain("crypto.randomUUID()");expect(onboardingIdempotencyJs).toContain("headers.set('Idempotency-Key',key)");expect(onboardingIdempotencyJs).toContain("brand-profile-revisions$")})});

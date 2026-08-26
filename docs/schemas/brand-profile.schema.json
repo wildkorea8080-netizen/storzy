@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://storzy.example/schemas/brand-profile.schema.json",
+  "title": "BrandProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "brand_name",
+    "summary",
+    "target_markets",
+    "audience",
+    "brand_style",
+    "pricing",
+    "catalog_plan",
+    "content_rules",
+    "assumptions"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "brand_name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "target_markets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["country_code", "content_locales"],
+        "properties": {
+          "country_code": { "type": "string", "pattern": "^[A-Z]{2}$" },
+          "content_locales": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" }
+          }
+        }
+      }
+    },
+    "audience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["age_min", "age_max", "segments", "interests", "purchase_motivations"],
+      "properties": {
+        "age_min": { "type": ["integer", "null"], "minimum": 0, "maximum": 120 },
+        "age_max": { "type": ["integer", "null"], "minimum": 0, "maximum": 120 },
+        "segments": { "type": "array", "items": { "type": "string", "maxLength": 100 } },
+        "interests": { "type": "array", "items": { "type": "string", "maxLength": 100 } },
+        "purchase_motivations": { "type": "array", "items": { "type": "string", "maxLength": 160 } }
+      }
+    },
+    "brand_style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keywords", "voice", "primary_colors", "avoid"],
+      "properties": {
+        "keywords": { "type": "array", "minItems": 1, "items": { "type": "string", "maxLength": 80 } },
+        "voice": { "type": "array", "minItems": 1, "items": { "type": "string", "maxLength": 80 } },
+        "primary_colors": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "hex"],
+            "properties": {
+              "name": { "type": "string", "maxLength": 40 },
+              "hex": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+            }
+          }
+        },
+        "avoid": { "type": "array", "items": { "type": "string", "maxLength": 160 } }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "target_margin_rate", "price_ranges"],
+      "properties": {
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "target_margin_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "price_ranges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["product_type", "min_minor", "max_minor"],
+            "properties": {
+              "product_type": { "type": "string", "minLength": 1, "maxLength": 80 },
+              "min_minor": { "type": "integer", "minimum": 0 },
+              "max_minor": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "catalog_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initial_product_count", "preferred_product_types", "excluded_product_types"],
+      "properties": {
+        "initial_product_count": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "preferred_product_types": { "type": "array", "items": { "type": "string", "maxLength": 80 } },
+        "excluded_product_types": { "type": "array", "items": { "type": "string", "maxLength": 80 } }
+      }
+    },
+    "content_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_claims", "prohibited_claims", "prohibited_terms"],
+      "properties": {
+        "required_claims": { "type": "array", "items": { "type": "string", "maxLength": 200 } },
+        "prohibited_claims": { "type": "array", "items": { "type": "string", "maxLength": 200 } },
+        "prohibited_terms": { "type": "array", "items": { "type": "string", "maxLength": 100 } }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 240 }
+    }
+  }
+}
+

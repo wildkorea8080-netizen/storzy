@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck)",
+      "Bash(npm test)",
+      "Bash(npm run test:watch)",
+      "Bash(npm run check)",
+      "Bash(npm run build)",
+      "Bash(npm run db:migrate:verify)",
+      "Bash(npx vitest run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)"
+    ],
+    "ask": [
+      "Bash(npm run providers:smoke)",
+      "Bash(npm run printful:catalog-smoke)",
+      "Bash(npm run shopify:draft-smoke)",
+      "Bash(npm run deploy:*)",
+      "Bash(npm run db:migrate)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Read(./.env)"
+    ]
+  }
+}

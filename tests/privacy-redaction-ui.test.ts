@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest";import{privacyRedactionCss,privacyRedactionJs}from"../src/admin/privacy-redaction-ui.js";
+describe("customer redaction UI",()=>{it("requires review state and confirmation",()=>{expect(privacyRedactionJs).toContain("title!=='고객 데이터 삭제 요청'");expect(privacyRedactionJs).toContain("status!=='검토 중'");expect(privacyRedactionJs).toContain("EXECUTE_CUSTOMER_REDACTION");expect(privacyRedactionJs).toContain("confirm(");expect(privacyRedactionCss).toContain(".redact-button");expect(()=>new Function(privacyRedactionJs)).not.toThrow();});});

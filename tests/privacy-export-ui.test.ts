@@ -1,0 +1,2 @@
+import{describe,expect,it}from"vitest";import{privacyExportCss,privacyExportJs}from"../src/admin/privacy-export-ui.js";
+describe("customer data export UI",()=>{it("only offers an authenticated download during review",()=>{expect(privacyExportJs).toContain("title!=='고객 데이터 제공 요청'");expect(privacyExportJs).toContain("status!=='검토 중'");expect(privacyExportJs).toContain("/export");expect(privacyExportJs).toContain("URL.revokeObjectURL");expect(privacyExportCss).toContain(".export-button");expect(()=>new Function(privacyExportJs)).not.toThrow();});});

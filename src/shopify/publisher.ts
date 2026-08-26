@@ -1,0 +1,5 @@
+import { PRODUCT_SET_MUTATION,type ShopifyAdminClient } from "../integrations/shopify.js";
+export type ProductSetResult=Readonly<{productId:string;raw:unknown}>;
+export type ProductSetPayload=Readonly<{identifier:Record<string,unknown>;input:Record<string,unknown>}>;
+export interface ShopifyPublisher{publish(payload:ProductSetPayload,workspaceId?:string):Promise<ProductSetResult>}
+export class ShopifyProductPublisher implements ShopifyPublisher{constructor(private readonly client:ShopifyAdminClient){}async publish(payload:ProductSetPayload):Promise<ProductSetResult>{const data=await this.client.graphql<{productSet:{product:{id:string}|null;userErrors:{code:string|null;field:string[]|null;message:string}[]}}>(PRODUCT_SET_MUTATION,{identifier:payload.identifier,input:payload.input,synchronous:true});const errors=data.productSet.userErrors;if(errors.length)throw Object.assign(new Error("Shopify productSet rejected input"),{shopifyUserErrors:errors,status:422});if(!data.productSet.product)throw new Error("Shopify productSet returned no product");return{productId:data.productSet.product.id,raw:data};}}

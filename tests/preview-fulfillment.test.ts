@@ -1,0 +1,2 @@
+import{describe,expect,it}from"vitest";import{buildPreviewShipment}from"../src/fulfillment/preview-service.js";
+describe("preview fulfillment",()=>{it("builds a traceable shipment event",()=>{const event=buildPreviewShipment({externalId:"storzy:w:o",lineItemId:"line-1",quantity:2,shipmentId:"shipment-12345678"});expect(event).toMatchObject({type:"shipment_sent",data:{order:{external_id:"storzy:w:o"},shipment:{id:"shipment-12345678",tracking_number:"STZ-SHIPMENT",shipment_items:[{order_item_external_id:"line-1",quantity:2}]}}})})});

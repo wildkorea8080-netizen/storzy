@@ -1,0 +1,3 @@
+import {describe,expect,it} from "vitest";
+import {orderAutomationActivityJs} from "../src/admin/order-automation-activity-ui.js";
+describe("order automation activity UI",()=>{it("shows external work and Printful rate usage using a read-only request",()=>{for(const value of ["activity.running","activity.heldRemoteDrafts","requiresAttention","rateLimitUsed","rateLimitCapacity","rateLimitedWaiting","rateLimitResetsAt",".simulator","/admin/orders"]){expect(orderAutomationActivityJs).toContain(value)}expect(orderAutomationActivityJs).not.toContain("method:'POST'");expect(()=>new Function(orderAutomationActivityJs)).not.toThrow()})});

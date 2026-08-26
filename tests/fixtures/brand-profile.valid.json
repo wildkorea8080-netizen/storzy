@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "brand_name": "Seoul Side Studio",
+  "summary": "서울의 거리 표지와 로컬 감성을 미니멀 그래픽으로 풀어내는 브랜드",
+  "target_markets": [
+    { "country_code": "US", "content_locales": ["en-US"] },
+    { "country_code": "JP", "content_locales": ["ja-JP"] }
+  ],
+  "audience": {
+    "age_min": 20,
+    "age_max": 40,
+    "segments": ["international Seoul enthusiasts"],
+    "interests": ["streetwear", "travel", "Korean culture"],
+    "purchase_motivations": ["A subtle reminder of Seoul"]
+  },
+  "brand_style": {
+    "keywords": ["Seoul street", "minimal", "local"],
+    "voice": ["concise", "observant"],
+    "primary_colors": [
+      { "name": "Black", "hex": "#000000" },
+      { "name": "White", "hex": "#FFFFFF" },
+      { "name": "Gray", "hex": "#777777" }
+    ],
+    "avoid": ["generic K-pop references"]
+  },
+  "pricing": {
+    "currency": "USD",
+    "target_margin_rate": 0.55,
+    "price_ranges": [{ "product_type": "t-shirt", "min_minor": 3500, "max_minor": 4500 }]
+  },
+  "catalog_plan": {
+    "initial_product_count": 20,
+    "preferred_product_types": ["t-shirt", "hoodie", "tote bag", "poster"],
+    "excluded_product_types": []
+  },
+  "content_rules": {
+    "required_claims": [],
+    "prohibited_claims": ["Made in Seoul unless verified"],
+    "prohibited_terms": []
+  },
+  "assumptions": []
+}
+

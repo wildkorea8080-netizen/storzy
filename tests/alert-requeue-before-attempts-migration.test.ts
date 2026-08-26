@@ -1,0 +1,3 @@
+import{readFileSync}from"node:fs";import{describe,expect,it}from"vitest";
+const sql=readFileSync(new URL("../migrations/076_alert_requeue_before_attempts.sql",import.meta.url),"utf8");
+describe("alert requeue prior attempts audit",()=>{it("extends every alert action ledger with a nonnegative prior attempt count",()=>{for(const table of["privacy_alert_delivery_actions","privacy_maintenance_delivery_actions","shopify_token_alert_delivery_actions"])expect(sql).toContain(`ALTER TABLE ${table}`);expect(sql.match(/ADD COLUMN before_attempts integer CHECK\(before_attempts>=0\)/g)).toHaveLength(3);});});

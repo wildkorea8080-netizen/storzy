@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://storzy.example/schemas/store-config.schema.json",
+  "title": "StoreConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "templateKey", "theme", "navigation", "pages"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "templateKey": { "enum": ["MINIMAL_FASHION", "KOREAN_STREET", "OUTDOOR_LIFESTYLE", "TOURIST_SOUVENIR", "CREATOR_MERCHANDISE"] },
+    "theme": {
+      "type": "object", "additionalProperties": false,
+      "required": ["primary", "secondary", "accent", "background"],
+      "properties": {
+        "primary": { "$ref": "#/$defs/color" }, "secondary": { "$ref": "#/$defs/color" },
+        "accent": { "$ref": "#/$defs/color" }, "background": { "$ref": "#/$defs/color" }
+      }
+    },
+    "navigation": { "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 40 } },
+    "pages": {
+      "type": "object", "additionalProperties": false,
+      "required": ["home", "shop", "collections", "about", "faq", "shipping", "returns", "contact"],
+      "properties": {
+        "home": { "$ref": "#/$defs/page" }, "shop": { "$ref": "#/$defs/page" },
+        "collections": { "$ref": "#/$defs/page" }, "about": { "$ref": "#/$defs/page" },
+        "faq": { "$ref": "#/$defs/page" }, "shipping": { "$ref": "#/$defs/page" },
+        "returns": { "$ref": "#/$defs/page" }, "contact": { "$ref": "#/$defs/page" }
+      }
+    }
+  },
+  "$defs": {
+    "color": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+    "page": {
+      "type": "object", "additionalProperties": false, "required": ["title", "body"],
+      "properties": { "title": { "type": "string", "minLength": 1, "maxLength": 120 }, "body": { "type": "string", "minLength": 1, "maxLength": 5000 } }
+    }
+  }
+}

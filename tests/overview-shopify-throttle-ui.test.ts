@@ -1,0 +1,3 @@
+import{describe,expect,it}from"vitest";
+import{overviewShopifyThrottleCss,overviewShopifyThrottleJs}from"../src/admin/overview-shopify-throttle-ui.js";
+describe("provider throttle overview UI",()=>{it("separates automatically recovering Printful and Shopify work",()=>{for(const value of ["body.data.throttles","t.candidates","t.mockups","t.publication","t.storefront","t.fulfillment","상품 후보","목업 생성","상품 게시","스토어 구성","배송 반영","운영자 조치는 필요하지 않습니다"]){expect(overviewShopifyThrottleJs).toContain(value)}expect(overviewShopifyThrottleCss).toContain("auto-fit");expect(()=>new Function(overviewShopifyThrottleJs)).not.toThrow()})});

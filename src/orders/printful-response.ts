@@ -1,0 +1,3 @@
+import{parseShopifyMoneyMinor}from"./shopify-webhook-service.js";
+type Obj=Record<string,unknown>;export type PrintfulOrderState=Readonly<{id:string;status:string;calculationStatus:string;costMinor:bigint|null;currency:string|null;raw:unknown}>;
+export function parsePrintfulOrder(value:unknown):PrintfulOrderState{const root=value as Obj,data=(root?.data??{})as Obj,costs=(data.costs??{})as Obj;const calculationStatus=String(costs.calculation_status??''),currency=typeof costs.currency==='string'?costs.currency.toUpperCase():null,total=costs.total;return{id:String(data.id??''),status:String(data.status??''),calculationStatus,costMinor:calculationStatus==='done'&&typeof total==='string'?parseShopifyMoneyMinor(total):null,currency,raw:value};}

@@ -1,0 +1,4 @@
+import{describe,expect,it}from"vitest";
+import{overviewUninstallAlertCss,overviewUninstallAlertJs}from"../src/admin/overview-uninstall-alert-ui.js";
+import{decorateAdminHtml}from"../src/admin/design-system.js";
+describe("overview Shopify uninstall alert",()=>{it("shows a Korean recovery action only on overview",()=>{for(const value of ["SHOPIFY_UNINSTALL","Shopify 앱 삭제","Shopify 다시 연결","/admin/integrations"])expect(overviewUninstallAlertJs).toContain(value);expect(overviewUninstallAlertCss).toContain(".shopify-uninstall-action");expect(()=>new Function(overviewUninstallAlertJs)).not.toThrow();const page=decorateAdminHtml("<html><head></head><body></body></html>","/admin");expect(page).toContain("overview-uninstall-alert.js");expect(decorateAdminHtml("<html><head></head><body></body></html>","/admin/orders")).not.toContain("overview-uninstall-alert.js")})});

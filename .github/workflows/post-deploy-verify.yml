@@ -1,0 +1,97 @@
+name: Post-deploy verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Production origin, for example https://app.example.com
+        required: true
+        type: string
+      workspace_id:
+        description: Workspace UUID to verify (optional)
+        required: false
+        type: string
+      expected_release:
+        description: Expected immutable image reference (optional)
+        required: false
+        type: string
+      process_attempts:
+        description: Number of process-health attempts
+        required: true
+        default: "12"
+        type: string
+      process_retry_ms:
+        description: Delay between attempts in milliseconds
+        required: true
+        default: "10000"
+        type: string
+  workflow_call:
+    inputs:
+      base_url:
+        required: true
+        type: string
+      workspace_id:
+        required: false
+        type: string
+        default: ""
+      expected_release:
+        required: false
+        type: string
+        default: ""
+      process_attempts:
+        required: false
+        type: string
+        default: "12"
+      process_retry_ms:
+        required: false
+        type: string
+        default: "10000"
+    secrets:
+      ADMIN_API_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: post-deploy-verify-${{ inputs.base_url }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify deployed STORZY
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ADMIN_API_TOKEN: ${{ secrets.ADMIN_API_TOKEN }}
+      DEPLOY_VERIFY_PROCESS_ATTEMPTS: ${{ inputs.process_attempts }}
+      DEPLOY_VERIFY_PROCESS_RETRY_MS: ${{ inputs.process_retry_ms }}
+      DEPLOY_VERIFY_EXPECTED_RELEASE: ${{ inputs.expected_release }}
+    steps:
+      - name: Check required secret
+        shell: bash
+        run: |
+          if [[ -z "$ADMIN_API_TOKEN" ]]; then
+            echo "Required GitHub secret ADMIN_API_TOKEN is not configured." >&2
+            exit 1
+          fi
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Verify deployment
+        shell: bash
+        env:
+          VERIFY_BASE_URL: ${{ inputs.base_url }}
+          VERIFY_WORKSPACE_ID: ${{ inputs.workspace_id }}
+        run: |
+          args=("$VERIFY_BASE_URL")
+          if [[ -n "$VERIFY_WORKSPACE_ID" ]]; then
+            args+=("$VERIFY_WORKSPACE_ID")
+          fi
+          npm run deploy:verify -- "${args[@]}"

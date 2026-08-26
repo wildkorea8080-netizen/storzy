@@ -1,0 +1,11 @@
+import{generationBackoffMs}from"../jobs/retry-policy.js";
+import type{Logger}from"../observability/logger.js";
+import{StorePublicationJobStore}from"./publication-job-store.js";
+import type{StorePublisher}from"./shopify-publisher.js";
+import{ShopifyConnectionUnavailableError}from"../shopify/workspace-publisher.js";
+
+export class StorePublicationWorker{
+  constructor(private readonly store:StorePublicationJobStore,private readonly publisher:StorePublisher,private readonly logger:Logger,private readonly options:Readonly<{workerId:string;leaseSeconds:number;maxAttempts:number;pollMs:number}> ){}
+  async processOne(){const job=await this.store.claim(this.options.workerId,this.options.leaseSeconds,this.options.maxAttempts);if(!job)return false;try{const result=await this.publisher.publish(job.plan,job.workspaceId);if(!await this.store.success(job.id,this.options.workerId,result))throw new Error("Lost store publication job lease");this.logger.info("shopify.store.published",{jobId:job.id,storeDraftId:job.storeDraftId});}catch(error){if(error instanceof ShopifyConnectionUnavailableError){await this.store.deferConnection(job.id,this.options.workerId);return true}const status=error&&typeof error==="object"&&"status"in error?Number((error as{status:unknown}).status):null,retryAfter=error&&typeof error==="object"&&"retryAfterMs"in error?Number((error as{retryAfterMs:unknown}).retryAfterMs):null;if(status===429){const delay=Number.isFinite(retryAfter)&&retryAfter!>0?retryAfter!:generationBackoffMs(job.attempt);await this.store.deferRateLimit(job.id,this.options.workerId,delay);this.logger.info("shopify.store.rate-limited",{jobId:job.id,delayMs:delay});return true}const code=status?`SHOPIFY_${status}`:error instanceof Error?error.name:"SHOPIFY_ERROR",retryable=status===null||status===408||status>=500;if(retryable&&job.attempt<this.options.maxAttempts)await this.store.retry(job.id,this.options.workerId,code,generationBackoffMs(job.attempt));else await this.store.fail(job.id,this.options.workerId,code);this.logger.error("shopify.store.publish-failed",{jobId:job.id,code,retryable});}return true}
+  async run(signal:AbortSignal){while(!signal.aborted){if(!await this.processOne())await new Promise(resolve=>setTimeout(resolve,this.options.pollMs))}}
+}

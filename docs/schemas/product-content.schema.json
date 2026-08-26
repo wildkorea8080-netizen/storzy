@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://storzy.example/schemas/product-content.schema.json",
+  "title": "ProductContent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "title_en",
+    "admin_title_ko",
+    "collection",
+    "description",
+    "key_features",
+    "materials_and_size",
+    "seo",
+    "tags",
+    "social_copy",
+    "pricing_hint",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "title_en": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "admin_title_ko": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "collection": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 3000 },
+    "key_features": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+    },
+    "materials_and_size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["materials_copy", "size_copy", "care_copy"],
+      "properties": {
+        "materials_copy": { "type": "string", "maxLength": 800 },
+        "size_copy": { "type": "string", "maxLength": 800 },
+        "care_copy": { "type": "string", "maxLength": 800 }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 70 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 180 }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+    },
+    "social_copy": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["channel", "locale", "text"],
+        "properties": {
+          "channel": { "type": "string", "enum": ["instagram", "tiktok", "x", "facebook", "generic"] },
+          "locale": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+          "text": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        }
+      }
+    },
+    "pricing_hint": {
+      "type": "object",
+      "description": "AI suggestion only. The server pricing engine is authoritative.",
+      "additionalProperties": false,
+      "required": ["currency", "suggested_retail_minor", "rationale"],
+      "properties": {
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "suggested_retail_minor": { "type": "integer", "minimum": 0 },
+        "rationale": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 240 }
+    }
+  }
+}

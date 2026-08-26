@@ -1,0 +1,3 @@
+import{describe,expect,it}from"vitest";
+import{privacyMaintenanceHistoryCss,privacyMaintenanceHistoryJs}from"../src/admin/privacy-maintenance-history-ui.js";
+describe("개인정보 유지관리 재전송 기록 UI",()=>{it("보호 API에서 사건별 기록을 읽고 담당자·상태·사유·초기화 전 시도 횟수를 표시한다",()=>{for(const value of["/actions?limit=20","Authorization:'Bearer '","재전송 기록","beforeStatus","beforeAttempts","이전 시도 ","actorId","reason"])expect(privacyMaintenanceHistoryJs).toContain(value);expect(()=>new Function(privacyMaintenanceHistoryJs)).not.toThrow();});it("기록 행과 모바일 배치를 제공한다",()=>{expect(privacyMaintenanceHistoryCss).toContain(".privacy-maintenance-history-row");expect(privacyMaintenanceHistoryCss).toContain("@media(max-width:720px)");});});

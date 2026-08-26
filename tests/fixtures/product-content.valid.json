@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "title_en": "SEOUL ONE-WAY STREET TEE",
+  "admin_title_ko": "서울 일방통행 반팔 티셔츠",
+  "collection": "SEOUL TEXT LINE",
+  "description": "A minimal streetwear tee inspired by Seoul's one-way road signs.",
+  "key_features": ["Minimal road-sign graphic", "Unisex everyday fit"],
+  "materials_and_size": {
+    "materials_copy": "Material details are supplied from the approved catalog variant.",
+    "size_copy": "See the variant-specific size guide.",
+    "care_copy": "Follow the care label supplied with the product."
+  },
+  "seo": {
+    "title": "Seoul One-Way Street Graphic Tee",
+    "description": "A minimal Seoul streetwear tee inspired by the city's one-way road signs."
+  },
+  "tags": ["seoul", "korean streetwear", "graphic tee"],
+  "social_copy": [
+    { "channel": "instagram", "locale": "en-US", "text": "One direction. One city. Seoul on a tee." }
+  ],
+  "pricing_hint": {
+    "currency": "USD",
+    "suggested_retail_minor": 3900,
+    "rationale": "Within the approved brand range; the pricing engine must recalculate the final amount."
+  },
+  "warnings": []
+}
+

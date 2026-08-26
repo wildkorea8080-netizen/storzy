@@ -1,0 +1,10 @@
+import {afterEach,describe,expect,it,vi} from "vitest";
+import {WorkspacePrintfulMockupClients} from "../src/mockups/workspace-printful-client.js";
+import {MockupWorker,PrintfulConnectionUnavailableError} from "../src/mockups/worker.js";
+
+afterEach(()=>vi.unstubAllGlobals());
+describe("workspace Printful mockup",()=>{
+  it("워크스페이스 저장 토큰과 Store ID로 Printful client를 만든다",async()=>{const fetch=vi.fn(async(_input:string|URL|Request,init?:RequestInit)=>new Response(JSON.stringify({result:{task_ids:["task-1"]}}),{status:200,headers:{"Content-Type":"application/json"}}));vi.stubGlobal("fetch",fetch);const connections={list:vi.fn().mockResolvedValue([{provider:"PRINTFUL",status:"CONNECTED",accountLabel:"42"}]),credentials:vi.fn().mockResolvedValue({token:"workspace-token",storeId:"42"})},resolver=new WorkspacePrintfulMockupClients(connections as never,"https://api.printful.com");const client=await resolver.forWorkspace("workspace-1");await client.createMockupTask({products:[]});const headers=new Headers(fetch.mock.calls[0]?.[1]?.headers);expect(headers.get("Authorization")).toBe("Bearer workspace-token");expect(headers.get("X-PF-Store-Id")).toBe("42")});
+  it("연결이 없으면 명시적인 대기 오류를 반환한다",async()=>{const connections={list:vi.fn().mockResolvedValue([]),credentials:vi.fn().mockResolvedValue(null)},resolver=new WorkspacePrintfulMockupClients(connections as never,"https://api.printful.com");await expect(resolver.forWorkspace("workspace-1")).rejects.toBeInstanceOf(PrintfulConnectionUnavailableError)});
+  it("연결 대기 목업은 실패시키거나 attempts를 소모하지 않고 defer한다",async()=>{const job={id:"job-1",revisionId:"revision-1",assetId:"asset-1",workspaceId:"workspace-1",remoteTaskIds:null,attempt:1},store={claim:vi.fn().mockResolvedValue(job),deferConnection:vi.fn(),fail:vi.fn()},resolver={forWorkspace:vi.fn().mockRejectedValue(new PrintfulConnectionUnavailableError())},worker=new MockupWorker(store as never,resolver,"worker");await expect(worker.tick()).resolves.toBe(true);expect(store.deferConnection).toHaveBeenCalledWith("job-1","worker");expect(store.fail).not.toHaveBeenCalled()});
+});

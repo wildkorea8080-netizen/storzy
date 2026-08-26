@@ -1,0 +1,32 @@
+name = "STORZY"
+client_id = "replace-with-shopify-client-id"
+application_url = "https://app.example.com"
+embedded = false
+
+[build]
+include_config_on_deploy = true
+
+[access_scopes]
+scopes = "write_products,write_content,read_orders"
+
+[auth]
+redirect_urls = ["https://app.example.com/api/integrations/shopify/oauth/callback"]
+
+[webhooks]
+api_version = "2026-07"
+
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "/webhooks/shopify/app-uninstalled"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request"]
+uri = "/webhooks/shopify/privacy/customers/data_request"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/redact"]
+uri = "/webhooks/shopify/privacy/customers/redact"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["shop/redact"]
+uri = "/webhooks/shopify/privacy/shop/redact"

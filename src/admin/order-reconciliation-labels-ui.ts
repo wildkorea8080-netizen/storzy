@@ -1,0 +1,6 @@
+export const orderReconciliationLabelsJs=`(()=>{
+const root=document.querySelector('.reconciliation');if(!root)return;
+const labels={MISSING_LOCAL_ORDER:'로컬 누락 주문',CANCELLATION_MISMATCH:'취소 상태 불일치',FINANCIAL_STATUS_MISMATCH:'결제 상태 불일치',OPEN:'처리 필요',ACKNOWLEDGED:'확인 중',RESOLVED:'해결 완료',ACKNOWLEDGE:'확인 접수',RESOLVE:'수동 해결',AUTO_RESOLVE_MATCHED:'재대조 자동 해결',REPLAY_MISSING_ORDER:'누락 주문 안전 재수신',SYNC_CANCELLATION:'취소 상태 반영',SYNC_FINANCIAL_STATUS:'결제 상태 반영',scheduler:'자동 스케줄러','admin-ui':'관리자 화면','admin-ui-retry':'관리자 재대조'};
+function translate(){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const raw=node.nodeValue||'',trimmed=raw.trim();if(labels[trimmed]){node.nodeValue=raw.replace(trimmed,labels[trimmed]);continue}for(const [code,label]of Object.entries(labels)){if(raw.startsWith(code+' · ')){node.nodeValue=label+raw.slice(code.length);break}if(raw.includes(' · '+code+' · ')){node.nodeValue=raw.replace(' · '+code+' · ',' · '+label+' · ');break}}}}
+let queued=false;const schedule=()=>{if(queued)return;queued=true;queueMicrotask(()=>{queued=false;translate()})};new MutationObserver(schedule).observe(root,{childList:true,subtree:true,characterData:true});translate();
+})();`;
