@@ -263,6 +263,7 @@
 | [203 Shopify draft 쓰기 smoke](203-shopify-draft-write-smoke.md) | 개발 스토어에 고정 handle의 비공개 draft 상품을 게시·재검증 | 명시적 실행 확인, 외부 쓰기 |
 | [204 Printful catalog 실계약 smoke](204-printful-catalog-contract-smoke.md) | 상품·variant·mockup style·가격·배송 국가의 실제 v2 GET 계약 검증 | 외부 변경 없음 |
 | [205 Claude Code 인수인계](205-claude-code-handoff.md) | Codex에서 이어받은 시점의 상태와 다음 작업 순서 | 검증 결과, P0 순서, 선행 조치 |
+| [206 티셔츠 목업 E2E 준비](206-tshirt-mockup-e2e-readiness.md) | Printful 티셔츠 상품 규격·디자인 파일 확보와 남은 차단 요인 | product 71, front/dtg, style ID, 공개 URL 선행 조건 |
 
 ## 기계 판독 계약
 
