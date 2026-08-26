@@ -264,6 +264,7 @@
 | [204 Printful catalog 실계약 smoke](204-printful-catalog-contract-smoke.md) | 상품·variant·mockup style·가격·배송 국가의 실제 v2 GET 계약 검증 | 외부 변경 없음 |
 | [205 Claude Code 인수인계](205-claude-code-handoff.md) | Codex에서 이어받은 시점의 상태와 다음 작업 순서 | 검증 결과, P0 순서, 선행 조치 |
 | [206 티셔츠 목업 E2E 준비](206-tshirt-mockup-e2e-readiness.md) | Printful 티셔츠 상품 규격·디자인 파일 확보와 남은 차단 요인 | product 71, front/dtg, style ID, 공개 URL 선행 조건 |
+| [207 배포 runbook](207-deployment-runbook.md) | 공개 HTTPS 배포의 단일 실행 순서 | 비밀값, 템플릿, migration 선행, 15개 역할, 검증, 롤백 |
 
 ## 기계 판독 계약
 
