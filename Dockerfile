@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY tsconfig.json vitest.config.ts ./
+# schema-registry가 ../../docs/schemas의 JSON 계약을 import하므로 빌드 컨텍스트에 함께 있어야 한다.
+COPY docs/schemas ./docs/schemas
 COPY src ./src
 COPY tests ./tests
 RUN npm run build && rm -rf dist/tests

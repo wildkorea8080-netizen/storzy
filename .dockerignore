@@ -10,5 +10,6 @@ coverage
 .tmp
 *.log
 docs
+!docs/schemas
 Dockerfile*
 README.md
