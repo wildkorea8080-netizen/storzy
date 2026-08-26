@@ -56,7 +56,8 @@
     "test": "vitest run",
     "test:db": "vitest run tests/postgres-store.integration.test.ts",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "brand:mark": "tsx src/brand-mark.ts"
   },
   "dependencies": {
     "ajv": "^8.20.0",
