@@ -100,14 +100,55 @@ Printful은 디자인 파일의 바이너리 업로드를 받지 않는다. 공�
 Printful 서버가 직접 파일을 가져간다. `docs/21`의 디자인 등록 API가 `fileUrl`을 HTTPS로
 제한하는 것도 같은 이유다.
 
-STORZY는 아직 공개 HTTPS 배포가 없어 이 URL을 제공할 수 없다. 따라서 목업 E2E는
-`docs/143`~`docs/145`, `docs/157`의 운영 배포가 끝난 뒤에 진행한다.
-
-공개 배포는 목업 외에 다음 P0 항목의 공통 선행 조건이기도 하다.
+STORZY 본체의 공개 HTTPS 배포는 목업 외에 다음 P0 항목의 공통 선행 조건이다.
 
 - Shopify 앱 URL과 OAuth callback 등록
 - Shopify·Printful Webhook 실환경 수신 검증
 - 주문 수신부터 배송 반영까지의 전체 흐름 E2E
+
+다만 목업 생성만 놓고 보면 필요한 것은 **디자인 파일을 가져갈 수 있는 주소 하나**뿐이며
+STORZY 본체가 그 주소를 제공할 필요는 없다. 본체 배포가 도메인·Shopify 앱 발급을 기다리는
+동안 목업 E2E를 먼저 검증하기 위해 디자인 파일만 정적 호스팅한다.
+
+## 디자인 파일 정적 배포
+
+`deploy/design-assets/`가 배포 단위다. 저장소 전체가 아니라 이 디렉터리만 올려서
+소스 코드가 공개되지 않게 한다.
+
+```text
+deploy/design-assets/
+  vercel.json                  Content-Type 과 캐시 헤더
+  index.html                   파일 목록 (noindex)
+  seoul-side-mark-navy.png     생성기가 함께 기록
+  seoul-side-mark-ivory.png    생성기가 함께 기록
+```
+
+PNG는 `npm run brand:mark`가 `assets/brand/`와 이 디렉터리에 동시에 쓴다.
+원본과 배포본이 어긋나지 않게 하기 위해서다.
+
+```bash
+npx vercel deploy --prod --cwd deploy/design-assets
+```
+
+배포 후 얻은 주소를 목업 payload의 `layers[].url`에 넣는다. 이 파일은 브랜드 마크이며
+자격 증명이나 운영 데이터를 포함하지 않는다.
+
+STORZY 본체를 배포한 뒤에는 디자인 파일도 자체 도메인에서 제공하고 이 정적 배포는 정리한다.
+
+### Vercel에 STORZY 본체를 올릴 수 없는 이유
+
+디자인 파일 호스팅과 달리 애플리케이션 자체는 Vercel에 맞지 않는다. 구조적 이유다.
+
+- worker 9개가 `worker.run(signal)`으로 도는 무한 폴링 루프이며 서버리스 함수의
+  최대 실행 시간 안에 끝나지 않는다.
+- `process-supervisor.ts`가 자식 프로세스를 `spawn`하고 30초 간격 heartbeat를 기록한다.
+  서버리스에서는 응답 후 인터벌이 유지되지 않는다.
+- `ProcessHeartbeatStore.health()`는 service·worker의 heartbeat가 90초를 넘으면 `STALE`로
+  판정하고, `npm run deploy:verify`는 15개 역할 중 하나라도 어긋나면 종료 코드 `1`을 낸다.
+  worker가 없는 환경에서는 감시 체계가 영구 실패 상태가 된다.
+
+worker를 cron 배치로 바꾸면 ADR-001의 모듈러 모놀리스 + 별도 worker 구조와 lease·heartbeat
+설계를 함께 다시 짜야 한다. 컨테이너를 장기 실행할 수 있는 호스팅을 사용한다.
 
 ## 재현 방법
 

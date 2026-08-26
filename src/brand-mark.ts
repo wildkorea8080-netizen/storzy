@@ -4,6 +4,8 @@ import { BRAND_IVORY, BRAND_NAVY, renderMarkPng, renderMarkSvg } from "./brand/m
 
 const DEFAULT_WIDTH = 4500;
 const OUTPUT_DIRECTORY = "assets/brand";
+/** Printful이 가져갈 수 있도록 공개 호스팅에 올리는 정적 배포 디렉터리. 원본과 어긋나지 않게 함께 쓴다. */
+const PUBLISH_DIRECTORY = "deploy/design-assets";
 
 function write(path: string, data: Buffer | string): void {
   const target = resolve(path);
@@ -27,6 +29,8 @@ function main(): void {
   write(`${OUTPUT_DIRECTORY}/seoul-side-mark.svg`, renderMarkSvg());
   write(`${OUTPUT_DIRECTORY}/seoul-side-mark-navy.png`, navy.png);
   write(`${OUTPUT_DIRECTORY}/seoul-side-mark-ivory.png`, ivory.png);
+  write(`${PUBLISH_DIRECTORY}/seoul-side-mark-navy.png`, navy.png);
+  write(`${PUBLISH_DIRECTORY}/seoul-side-mark-ivory.png`, ivory.png);
 }
 
 main();
