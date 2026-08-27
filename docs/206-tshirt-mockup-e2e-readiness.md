@@ -93,7 +93,7 @@ effectiveDpi     = min(4500 / 12, 3150 / 16) = min(375, 196.87) = 196.87
 }
 ```
 
-## 차단 요인 — 공개 HTTPS URL
+## 공개 HTTPS URL 제약
 
 Printful은 디자인 파일의 바이너리 업로드를 받지 않는다. 공식 문서의 목업 생성 절차는
 파일을 공개 URL에 올린 뒤 그 URL을 전달하도록 요구하며, `layers[].url`에 지정한 주소로
@@ -135,6 +135,15 @@ npx vercel deploy --prod --cwd deploy/design-assets
 
 STORZY 본체를 배포한 뒤에는 디자인 파일도 자체 도메인에서 제공하고 이 정적 배포는 정리한다.
 
+배포한 주소는 다음과 같다.
+
+```text
+https://design-assets-eight.vercel.app/seoul-side-mark-navy.png
+  HTTP 200  image/png  106,398 bytes
+  SHA256 이 로컬 원본과 일치
+```
+
+
 ### Vercel에 STORZY 본체를 올릴 수 없는 이유
 
 디자인 파일 호스팅과 달리 애플리케이션 자체는 Vercel에 맞지 않는다. 구조적 이유다.
@@ -149,6 +158,41 @@ STORZY 본체를 배포한 뒤에는 디자인 파일도 자체 도메인에서 
 
 worker를 cron 배치로 바꾸면 ADR-001의 모듈러 모놀리스 + 별도 worker 구조와 lease·heartbeat
 설계를 함께 다시 짜야 한다. 컨테이너를 장기 실행할 수 있는 호스팅을 사용한다.
+
+## 실행 결과
+
+2026-08-27에 실제 Printful 계정에서 목업 생성을 통과했다.
+
+```text
+POST /v2/mockup-tasks    task 961905462 생성
+상태 조회                10초 후 completed
+결과 이미지              3개 (variant 4021, 4022, 4023)
+이미지 검증              JPEG 1000x1000, 189 KB
+```
+
+저장소의 실제 코드 경로를 그대로 사용했다. `PrintfulClient.createMockupTask`,
+`parseCreatedTaskIds`, `parseMockupTasks` 는 목업 worker 가 쓰는 것과 같으므로
+`docs/21` 의 파이프라인 계약이 실환경에서 성립한다는 것이 확인됐다.
+
+주문, 결제, 상품 등록, 배송은 발생하지 않았다.
+
+### 결과 이미지 만료
+
+Printful 목업 이미지 URL 은 72시간 후 만료된다. `docs/21` 이 정의한 대로 완료 이미지는
+`mockup_snapshots` 에 URL 과 SHA-256 checksum 으로 불변 저장한 뒤에만 Shopify 작업을
+`PENDING` 으로 전환해야 한다. 원격 URL 을 그대로 상품 이미지로 사용하지 않는다.
+
+### 확인이 필요한 후속 사항
+
+**variant 3개가 같은 이미지 URL 을 반환했다.** `4021`(S), `4022`(M), `4023`(L) 은 모두
+Aqua 색상이라 사이즈만 다르다. Printful 은 색상 단위로 목업을 만들기 때문에 동일 이미지를
+돌려준다. 정상 동작이지만 Shopify 에 variant 별 이미지를 매핑할 때 같은 파일이 중복
+업로드될 수 있다. `docs/20` 의 variant·이미지 매핑에서 색상 단위 중복 제거가 이루어지는지
+확인해야 한다.
+
+**선택한 색상이 브랜드 팔레트와 맞지 않는다.** 카탈로그 표본의 앞 3개를 그대로 썼기 때문에
+Aqua 가 선택됐다. 실제 상품 구성에서는 브랜드 색상(네이비, 스톤그레이, 아이보리, 샌드)에
+맞는 variant 를 고르고, 진한 원단에는 `seoul-side-mark-ivory.png` 를 사용한다.
 
 ## 재현 방법
 

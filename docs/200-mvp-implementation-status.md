@@ -9,7 +9,7 @@
 | 브랜드 온보딩·Structured Outputs·revision 승인 | 완료 | 완료 | OpenAI 운영 키 smoke 필요 | 조건부 완료 |
 | Printful 카탈로그·결정론적 점수·상품 후보 검수 | 완료 | 완료 | 실제 v2 상품·variant·mockup style·가격·배송 국가 contract 통과 | 완료 |
 | AI 상품 콘텐츠·편집 revision·승인 | 완료 | 완료 | OpenAI 비용·지연 관측 필요 | 조건부 완료 |
-| 디자인 업로드·검증·Printful 목업 | 완료 | 완료 | Printful 실제 파일·목업 E2E 필요 | 조건부 완료 |
+| 디자인 업로드·검증·Printful 목업 | 완료 | 완료 | 실제 계정에서 티셔츠 목업 생성 E2E 통과 | 완료 |
 | Shopify 상품 `productSet` 게시 | 완료 | preview adapter 완료 | 개발 스토어 draft productSet E2E 통과 | 완료 |
 | 스토어 템플릿·페이지·메뉴 게시 | 완료 | preview storefront 완료 | 테마·페이지 개발 스토어 E2E 필요 | 조건부 완료 |
 | Shopify OAuth·토큰 갱신·Webhook 동기화 | 완료 | contract·실패 경로 완료 | 공개 앱 설정 배포·심사 필요 | 조건부 완료 |
@@ -33,10 +33,12 @@
 
 ### P0 — 실제 공급사 E2E
 
+Printful 실제 목업 생성은 통과했다(`docs/206`). 남은 항목은 다음과 같다.
+
 1. Shopify 개발 스토어에 OAuth 연결
 2. 승인 상품 1개를 draft로 게시하고 variant·이미지·SEO 확인
 3. 승인 스토어 초안의 페이지·메뉴 반영 확인
-4. Printful 실제 catalog/template/mockup 호출 확인
+4. Printful 실제 catalog/template 호출 확인 (mockup 은 완료)
 5. 비용이 발생하지 않는 범위에서 주문 draft와 비용 검증
 6. Shopify 주문 Webhook부터 shipment·fulfillment까지 추적
 7. `app/uninstalled` 및 Shopify privacy Webhook 수신 확인
