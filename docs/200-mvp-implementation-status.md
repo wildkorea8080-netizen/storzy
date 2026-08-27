@@ -33,10 +33,15 @@
 
 ### P0 — 실제 공급사 E2E
 
-Printful 실제 목업 생성은 통과했다(`docs/206`). 남은 항목은 다음과 같다.
+다음 항목은 실제 계정에서 통과했다.
 
-1. Shopify 개발 스토어에 OAuth 연결
-2. 승인 상품 1개를 draft로 게시하고 variant·이미지·SEO 확인
+- Printful 목업 생성 (`docs/206`)
+- Printful variant·목업 이미지를 포함한 Shopify draft 상품 게시와 멱등 재게시 (`docs/208`)
+
+남은 항목은 다음과 같다.
+
+1. Shopify 개발 스토어에 OAuth 연결 (현재는 custom app 토큰 사용)
+2. 자체 이미지 호스팅으로 목업 URL 72시간 만료 대응
 3. 승인 스토어 초안의 페이지·메뉴 반영 확인
 4. Printful 실제 catalog/template 호출 확인 (mockup 은 완료)
 5. 비용이 발생하지 않는 범위에서 주문 draft와 비용 검증

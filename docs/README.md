@@ -265,6 +265,7 @@
 | [205 Claude Code 인수인계](205-claude-code-handoff.md) | Codex에서 이어받은 시점의 상태와 다음 작업 순서 | 검증 결과, P0 순서, 선행 조치 |
 | [206 티셔츠 목업 E2E 준비](206-tshirt-mockup-e2e-readiness.md) | Printful 티셔츠 상품 규격·디자인 파일 확보와 남은 차단 요인 | product 71, front/dtg, style ID, 공개 URL 선행 조건 |
 | [207 배포 runbook](207-deployment-runbook.md) | 공개 HTTPS 배포의 단일 실행 순서 | 비밀값, 템플릿, migration 선행, 15개 역할, 검증, 롤백 |
+| [208 variant 매핑 E2E](208-variant-mapping-e2e.md) | Printful variant·목업 이미지의 Shopify 매핑 실환경 검증 | 색상 단위 목업, SKU·metafield, 이미지 비동기, 멱등 재게시 |
 
 ## 기계 판독 계약
 

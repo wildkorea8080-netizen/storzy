@@ -24,6 +24,14 @@ Printful catalog variant는 실제 blank product의 size/color 조합이다. can
 
 공식 계약: [ProductVariantSetInput](https://shopify.dev/docs/api/admin-graphql/latest/input-objects/productvariantsetinput), [FileSetInput](https://shopify.dev/docs/api/admin-graphql/latest/input-objects/filesetinput)
 
+## 실환경 검증
+
+2026-08-27에 디자인이 합성된 실제 mockup 이미지로 매핑 전 경로를 확인했다. 색상 2종 x 사이즈 5종의 variant 10개, SKU, metafield, 이미지 연결, 멱등 재게시가 모두 성립한다. 상세는 [208 variant 매핑 E2E](208-variant-mapping-e2e.md)에 있다.
+
+Printful은 사이즈가 아니라 색상 단위로 목업을 만든다. 같은 색상의 모든 사이즈는 하나의 이미지 URL을 공유하므로, 사이즈별로 목업 task를 만들면 동일 이미지를 중복 생성한다.
+
 ## 현재 제한
 
-Printful의 blank catalog 이미지를 사용하며 디자인이 합성된 mockup은 아직 아니다. 다음 단계에서 mockup task 생성·완료 polling/webhook과 생성 이미지 URL snapshot을 연결한다.
+외부 URL 이미지는 Shopify가 비동기로 내려받아 처리한다. 게시 직후에는 variant media가 `PROCESSING` 상태라 비어 보일 수 있으므로 `status`와 `mediaErrors`를 함께 확인해야 실패와 지연을 구분할 수 있다.
+
+재게시할 때마다 Shopify가 원본 URL에서 이미지를 다시 가져간다. Printful 목업 URL은 72시간 후 만료되므로, 만료 뒤 재게시하면 이미지 처리가 실패한다. `docs/21`의 `mockup_snapshots` 저장과 자체 이미지 호스팅이 갖춰져야 장기 재게시가 안전하다.
