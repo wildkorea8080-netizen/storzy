@@ -266,6 +266,7 @@
 | [206 티셔츠 목업 E2E 준비](206-tshirt-mockup-e2e-readiness.md) | Printful 티셔츠 상품 규격·디자인 파일 확보와 남은 차단 요인 | product 71, front/dtg, style ID, 공개 URL 선행 조건 |
 | [207 배포 runbook](207-deployment-runbook.md) | 공개 HTTPS 배포의 단일 실행 순서 | 비밀값, 템플릿, migration 선행, 15개 역할, 검증, 롤백 |
 | [208 variant 매핑 E2E](208-variant-mapping-e2e.md) | Printful variant·목업 이미지의 Shopify 매핑 실환경 검증 | 색상 단위 목업, SKU·metafield, 이미지 비동기, 멱등 재게시 |
+| [209 주문 draft 원가 E2E](209-printful-order-draft-e2e.md) | Printful draft 생성·원가 재검증과 결정론적 정책 판정 | 실측 원가 20.24, 마진 48.1%, 6개 차단 시나리오 |
 
 ## 기계 판독 계약
 
